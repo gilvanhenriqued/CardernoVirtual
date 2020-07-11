@@ -5,12 +5,14 @@ const Annotations = require('../models/annotations');
 // POST – To create a new annotation (localhost:3000/annotations)
 router.post('/annotations', async (req, res) => {
   const annotation = new Annotations ({
-    author: req.body.author,
+    // TODO: get the user_id and user_namelogged
+    author_id: req.body.author_id,
+    author_name: req.body.author_name,
     title: req.body.title,
     description: req.body.description,
-    publicationDate: new Date(),
-    isPublic: req.body.isPublic,
-    subjectsTags: req.body.subjectsTags
+    publication_date: new Date(),
+    is_public: req.body.is_public,
+    subjects_tags: req.body.subjects_tags
   });
 
   await annotation.save()
@@ -47,12 +49,13 @@ router.get('/annotations/:id', async (req, res) => {
 router.put('/annotations/:id', async (req, res) => {
   const newAnnotation = {
     _id: req.params.id,
-    author: req.body.author,
+    author_id: req.body.author_id,
+    author_name: req.body.author_name,
     title: req.body.title,
     description: req.body.description,
-    publicationDate: new Date(),
-    isPublic: req.body.isPublic,
-    subjectsTags: req.body.subjectsTags
+    publication_date: new Date(),
+    is_public: req.body.is_public,
+    subjects_tags: req.body.subjects_tags
   };
 
   await Annotations.findByIdAndUpdate(req.params.id, newAnnotation, { new: true })
