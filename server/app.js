@@ -13,7 +13,7 @@ const usersRouter = require('./routes/users');
 // mogodb configurations
 // pass: 
 mongoose.connect(
-  'mongodb+srv://gilvanh:dBzCET6SJHbJFIhX@development.cefey.mongodb.net/cadernovirtualdb?retryWrites=true&w=majority', {
+  'mongodb+srv://gilvanh:Wa1B68k4axXr8vSp@development.oyten.mongodb.net/cadernovirtualdb?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
@@ -30,9 +30,10 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-
+// routes configurations
+app.use(indexRouter);
+app.use(usersRouter);
 
 module.exports = app;
