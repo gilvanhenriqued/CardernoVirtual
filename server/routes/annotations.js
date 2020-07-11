@@ -63,8 +63,15 @@ router.put('/annotations/:id', async (req, res) => {
     });
 });
 
-
-
+// DELETE – To remove a annotation by id (localhost:3000/annotations/:id)
+router.delete('/annotations/:id', async (req, res) => {
+  await Annotations.findByIdAndRemove(req.params.id)
+    .then((annotation) => {
+      response(res, true, "Annotation deleted successfully!", annotation, 200);
+    }, (error) => {
+      response(res, false, "Failed trying remove the annotation...", error, 500);
+    });
+});
 
 
 // function to optimizate the responses
