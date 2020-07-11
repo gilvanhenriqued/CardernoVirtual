@@ -4,7 +4,7 @@ const Annotations = mongoose.model('Annotation', new mongoose.Schema({
   author: {type: String, required: true, unique: true},
   title: {type: String, required: true},
   description: {type: String, required: true},
-  publicationDate: {type: Date, default: Date.now},
+  publicationDate: {type: Date},
   subjectsTags: [String]
 }));
 

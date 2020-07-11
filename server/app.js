@@ -10,6 +10,7 @@ const mongoose = require('mongoose');
 const indexRouter = require('./routes/index');
 const verifyAccessToken = require('./routes/middlware/veridyAccessTokenMiddleware');
 const usersRouter = require('./routes/users');
+const annotationsRouter = require('./routes/annotations');
 
 // mogodb configurations
 // pass: 
@@ -36,5 +37,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // routes configurations
 app.use(verifyAccessToken, indexRouter);
 app.use(usersRouter);
+app.use(annotationsRouter);
 
 module.exports = app;
