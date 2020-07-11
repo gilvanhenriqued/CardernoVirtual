@@ -64,7 +64,7 @@ router.post('/authenticate', async function(req, res) {
   }
 });
 
-/* GET users by ID*/
+/* GET user by ID*/
 router.get('/users/:id', async function(req, res) {
   try {
     const user = await Users.findById(req.params.id);
@@ -84,11 +84,36 @@ router.get('/users/:id', async function(req, res) {
     return res
       .status(500)
       .json({
-        msg: "Error trying to authenticated...",
+        msg: "Error trying to get user data...",
         error
       });
   }
 });
 
+/* PUT UPDATE user by ID*/
+router.put('/users/:id', async function(req, res) {
+  try {
+    if (!req.body.username || !req.body.password) {
+      return res
+        .status(400)
+        .json({ msg: "Required fields cannot be empty..."});
+    }
+
+    let user = await Users.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    
+    return res
+      .status(200)
+      .json(user);
+    
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({
+        msg: "Error trying to update user data...",
+        error
+      });
+  }
+});
 
 module.exports = router;
