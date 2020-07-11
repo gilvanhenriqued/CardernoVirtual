@@ -32,6 +32,18 @@ router.get('/annotations', async (req, res) => {
     });
 });
 
+// GET – To get a annotation by id (localhost:3000/annotations/:id)
+router.get('/annotations/:id', async (req, res) => {
+  await Annotations.findById(req.params.id)
+    //.select('_id author title description isPublic publicationDate subjectsTags')
+    .exec()
+    .then((annotation) => {
+      response(res, true, "Annotations data accessed!", annotation, 200);
+    }, (error) => {
+      response(res, false, "Failed trying get the annotation...", error, 500);
+    });
+});
+
 
 
 
