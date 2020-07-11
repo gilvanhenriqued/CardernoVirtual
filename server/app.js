@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 
 // routes
 const indexRouter = require('./routes/index');
+const verifyAccessToken = require('./routes/middlware/veridyAccessTokenMiddleware');
 const usersRouter = require('./routes/users');
 
 // mogodb configurations
@@ -33,7 +34,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // routes configurations
-app.use(indexRouter);
+app.use(verifyAccessToken, indexRouter);
 app.use(usersRouter);
 
 module.exports = app;
