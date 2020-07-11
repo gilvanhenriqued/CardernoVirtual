@@ -35,12 +35,31 @@ router.get('/annotations', async (req, res) => {
 // GET – To get a annotation by id (localhost:3000/annotations/:id)
 router.get('/annotations/:id', async (req, res) => {
   await Annotations.findById(req.params.id)
-    //.select('_id author title description isPublic publicationDate subjectsTags')
     .exec()
     .then((annotation) => {
       response(res, true, "Annotations data accessed!", annotation, 200);
     }, (error) => {
       response(res, false, "Failed trying get the annotation...", error, 500);
+    });
+});
+
+// PUT – To update a annotation by id (localhost:3000/annotations/:id)
+router.put('/annotations/:id', async (req, res) => {
+  const newAnnotation = {
+    _id: req.params.id,
+    author: req.body.author,
+    title: req.body.title,
+    description: req.body.description,
+    publicationDate: new Date(),
+    isPublic: req.body.isPublic,
+    subjectsTags: req.body.subjectsTags
+  };
+
+  await Annotations.findByIdAndUpdate(req.params.id, newAnnotation, { new: true })
+    .then((annotation) => {
+      response(res, true, "Annotation successfully updated!", annotation, 200);
+    }, (error) => {
+      response(res, false, "Failed trying update annotation...", error, 500);
     });
 });
 
@@ -55,7 +74,8 @@ function response(res, success=true, msg="", result, status){
   .json({
     success: success,
     msg: msg,
-    result: result
+    result: result,
+    status: status
   });
 }
 
