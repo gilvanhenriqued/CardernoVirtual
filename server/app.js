@@ -1,4 +1,6 @@
 // imports
+require("dotenv").config();
+
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -14,7 +16,8 @@ const annotationsRouter = require('./routes/annotations');
 
 // mogodb configurations
 // pass: 
-const MONGO_URL = 'mongodb+srv://gilvanh:Wa1B68k4axXr8vSp@development.oyten.mongodb.net/cadernovirtualdb?retryWrites=true&w=majority';
+const MONGO_URL = "mongodb+srv://gilvanh:Wa1B68k4axXr8vSp@development.oyten.mongodb.net/cadernovirtualdb?retryWrites=true&w=majority";
+
 mongoose.connect(
   MONGO_URL, {
   useNewUrlParser: true,
