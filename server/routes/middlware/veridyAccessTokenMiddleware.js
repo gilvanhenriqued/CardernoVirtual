@@ -1,8 +1,7 @@
-const User = require('../../models/users');
 const jwt = require('jsonwebtoken');
 const Users = require('../../models/users');
 
-module.exports = async (req, res, next) => {
+module.exports = async function(req, res, next) {
   try {
     if (!req.headers['authorization']) {
       return res

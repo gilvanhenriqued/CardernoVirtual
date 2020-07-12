@@ -7,8 +7,8 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 
 // routes
-const indexRouter = require('./routes/index');
 const verifyAccessToken = require('./routes/middlware/veridyAccessTokenMiddleware');
+const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const annotationsRouter = require('./routes/annotations');
 
@@ -35,8 +35,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // routes configurations
-app.use(verifyAccessToken, indexRouter);
+app.use(indexRouter);
 app.use(usersRouter);
-app.use(annotationsRouter);
+app.use(verifyAccessToken, annotationsRouter);
 
 module.exports = app;

@@ -4,30 +4,23 @@ const Users = require('../models/users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const response = require('./middlware/response');
+const verifyAccessToken = require('./middlware/veridyAccessTokenMiddleware');
 
 // POST – To create a new user (localhost:3000/users)
 router.post('/users', async function(req, res) {
-  try {
-    const newUser = new Users({
-      username: req.body.username,
-      password: bcrypt.hashSync(req.body.password, 10),
-      name: req.body.name
-    });
+  const user = new Users({
+    username: req.body.username,
+    password: bcrypt.hashSync(req.body.password, 10),
+    name: req.body.name
+  });
 
-    await newUser.save();
-    return res
-      .status(201)
-      .json("User successfully created!");
-      
-  } catch (error) {
-    console.log(error);
-    return res
-      .status(500)
-      .json({
-        msg: "New user cannot be created...",
-        error
-      });
-  }
+  await user.save()
+  .then((user) => {
+    response(res, true, "User successfully created!", user, 201);
+  }, (error) => {
+    response(res, false, "New user cannot be created...", error, 500);
+  });
+
 });
 
 // POST – To authenticate (localhost:3000/authenticate)
@@ -67,24 +60,16 @@ router.post('/authenticate', async function(req, res) {
 });
 
 // GET – To get a user by ID (localhost:3000/users/:id)
-router.get('/users/:id', async function(req, res) {
-  try {
-    const user = await Users.findById(req.params.id);
+router.get('/users/:id', verifyAccessToken, async function(req, res) {
 
-    if(!user) {
-      return res
-        .status(400)
-        .json({ msg: "User not found..."});
-    }
-   
+  await Users.findById(req.params.id)
+  .exec()
+  .then((user) => {
     response(res, true, "User data successfully accessed!", user, 200);
+  }, (error) => {
+    response(res, false, "Failed trying get the user...", error, 500);
+  });
 
-    
-  } catch (error) {
-
-    response(res, false, "Error trying to get user data...", error, 500);
-    
-  }
 });
 
 // PUT – To update a user by ID (localhost:3000/users/:id)
