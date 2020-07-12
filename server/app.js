@@ -14,8 +14,9 @@ const annotationsRouter = require('./routes/annotations');
 
 // mogodb configurations
 // pass: 
+const MONGO_URL = 'mongodb+srv://gilvanh:Wa1B68k4axXr8vSp@development.oyten.mongodb.net/cadernovirtualdb?retryWrites=true&w=majority';
 mongoose.connect(
-  'mongodb+srv://gilvanh:Wa1B68k4axXr8vSp@development.oyten.mongodb.net/cadernovirtualdb?retryWrites=true&w=majority', {
+  MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
