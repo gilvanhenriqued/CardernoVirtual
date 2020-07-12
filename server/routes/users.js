@@ -10,6 +10,7 @@ router.post('/users', async function(req, res) {
     const newUser = new Users({
       username: req.body.username,
       password: bcrypt.hashSync(req.body.password, 10),
+      name: req.body.name
     });
 
     await newUser.save();
@@ -93,7 +94,7 @@ router.get('/users/:id', async function(req, res) {
 /* PUT UPDATE user by ID*/
 router.put('/users/:id', async function(req, res) {
   try {
-    if (!req.body.username || !req.body.password) {
+    if (!req.body.username || !req.body.password || !req.body.name) {
       return res
         .status(400)
         .json({ msg: "Required fields cannot be empty..."});

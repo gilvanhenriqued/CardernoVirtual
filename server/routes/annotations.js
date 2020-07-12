@@ -4,10 +4,10 @@ const Annotations = require('../models/annotations');
 
 // POST – To create a new annotation (localhost:3000/annotations)
 router.post('/annotations', async (req, res) => {
+
   const annotation = new Annotations ({
-    // TODO: get the user_id and user_namelogged
-    author_id: req.body.author_id,
-    author_name: req.body.author_name,
+    author_id: req.body.user._id,
+    author_name: req.body.user.name,
     title: req.body.title,
     description: req.body.description,
     publication_date: new Date(),
@@ -49,8 +49,8 @@ router.get('/annotations/:id', async (req, res) => {
 router.put('/annotations/:id', async (req, res) => {
   const newAnnotation = {
     _id: req.params.id,
-    author_id: req.body.author_id,
-    author_name: req.body.author_name,
+    author_id: req.body.user._id,
+    author_name: req.body.user.name,
     title: req.body.title,
     description: req.body.description,
     publication_date: new Date(),
