@@ -67,11 +67,9 @@ router.get('/userAnnotations/:author_id', async (req, res) => {
 });
 
 // PUT – To update a annotation by id (localhost:3000/annotations/:id)
-router.put('/annotations/:id', async (req, res) => {
+router.put('/annotations/:id', async (req, res) => {  
   const newAnnotation = {
     _id: req.params.id,
-    author_id: req.body.user._id,
-    author_name: req.body.user.name,
     title: req.body.title,
     description: req.body.description,
     publication_date: new Date(),
@@ -81,6 +79,9 @@ router.put('/annotations/:id', async (req, res) => {
 
   await Annotations.findByIdAndUpdate(req.params.id, newAnnotation, { new: true })
     .then((annotation) => {
+      if(req.body.user._id != annotation.author_id) {
+        response(res, false, "This user don't have permission to update this annotation...", undefined, 400);
+      }
       response(res, true, "Annotation successfully updated!", annotation, 200);
     }, (error) => {
       response(res, false, "Failed trying update annotation...", error, 500);
