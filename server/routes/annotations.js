@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Annotations = require('../models/annotations');
 const Users = require('../models/users');
+const response = require('./middlware/response');
 
 // POST – To create a new annotation (localhost:3000/annotations)
 router.post('/annotations', async (req, res) => {
@@ -54,7 +55,7 @@ router.get('/userAnnotations/:author_id', async (req, res) => {
 
       Users.findById(req.params.author_id)
         .exec()
-        .then((user) => {
+        .then((_) => {
           response(res, true, "Annotations successfully listed!", annotations, 200);
         }, (error) => {
           response(res, false, "User not found...", error, 404);
@@ -95,18 +96,5 @@ router.delete('/annotations/:id', async (req, res) => {
       response(res, false, "Failed trying remove the annotation...", error, 500);
     });
 });
-
-
-// function to optimizate the responses
-function response(res, success=true, msg="", result, status){
-  return res
-  .status(status)
-  .json({
-    success: success,
-    msg: msg,
-    result: result,
-    status: status
-  });
-}
 
 module.exports = router;

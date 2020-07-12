@@ -3,8 +3,9 @@ const router = express.Router();
 const Users = require('../models/users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const response = require('./middlware/response');
 
-/* POST users - signup*/
+// POST – To create a new user (localhost:3000/users)
 router.post('/users', async function(req, res) {
   try {
     const newUser = new Users({
@@ -29,7 +30,7 @@ router.post('/users', async function(req, res) {
   }
 });
 
-/* POST users - authenticate*/
+// POST – To authenticate (localhost:3000/authenticate)
 router.post('/authenticate', async function(req, res) {
   try {
     const user = await Users.findOne({
@@ -65,7 +66,7 @@ router.post('/authenticate', async function(req, res) {
   }
 });
 
-/* GET user by ID*/
+// GET – To get a user by ID (localhost:3000/users/:id)
 router.get('/users/:id', async function(req, res) {
   try {
     const user = await Users.findById(req.params.id);
@@ -75,23 +76,18 @@ router.get('/users/:id', async function(req, res) {
         .status(400)
         .json({ msg: "User not found..."});
     }
+   
+    response(res, true, "User data successfully accessed!", user, 200);
 
-    return res
-      .status(200)
-      .json(user);
     
   } catch (error) {
-    console.log(error);
-    return res
-      .status(500)
-      .json({
-        msg: "Error trying to get user data...",
-        error
-      });
+
+    response(res, false, "Error trying to get user data...", error, 500);
+    
   }
 });
 
-/* PUT UPDATE user by ID*/
+// PUT – To update a user by ID (localhost:3000/users/:id)
 router.put('/users/:id', async function(req, res) {
   try {
     if (!req.body.username || !req.body.password || !req.body.name) {
@@ -117,7 +113,7 @@ router.put('/users/:id', async function(req, res) {
   }
 });
 
-/* DELETE user by ID*/
+// DELETE – To remove a user by ID (localhost:3000/users/:id)
 router.delete('/users/:id', async function(req, res) {
   await Users.findByIdAndRemove(req.params.id)
     .then((user) => {
@@ -140,5 +136,6 @@ router.delete('/users/:id', async function(req, res) {
         });
     });
 });
+
 
 module.exports = router;
