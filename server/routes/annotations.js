@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Annotations = require('../models/annotations');
+const Users = require('../models/users');
 
 // POST – To create a new annotation (localhost:3000/annotations)
 router.post('/annotations', async (req, res) => {
@@ -42,6 +43,25 @@ router.get('/annotations/:id', async (req, res) => {
       response(res, true, "Annotations data accessed!", annotation, 200);
     }, (error) => {
       response(res, false, "Failed trying get the annotation...", error, 500);
+    });
+});
+
+// GET – To get the annotations by author_id (localhost:3000/userAnnotations/:author_id)
+router.get('/userAnnotations/:author_id', async (req, res) => {
+  await Annotations.find({ author_id: req.params.author_id })
+    .exec()
+    .then((annotations) => {
+
+      Users.findById(req.params.author_id)
+        .exec()
+        .then((user) => {
+          response(res, true, "Annotations successfully listed!", annotations, 200);
+        }, (error) => {
+          response(res, false, "User not found...", error, 404);
+        });
+
+    }, (error) => {
+      response(res, false, "Failed trying get the annotations...", error, 500);
     });
 });
 
