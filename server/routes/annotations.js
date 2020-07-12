@@ -77,11 +77,16 @@ router.put('/annotations/:id', async (req, res) => {
     subjects_tags: req.body.subjects_tags
   };
 
-  await Annotations.findByIdAndUpdate(req.params.id, newAnnotation, { new: true })
+  // validate if the annotation is own
+  await Annotations.findById(req.params.id)
     .then((annotation) => {
       if(req.body.user._id != annotation.author_id) {
         response(res, false, "This user don't have permission to update this annotation...", undefined, 400);
       }
+  });
+
+  await Annotations.findByIdAndUpdate(req.params.id, newAnnotation, { new: true })
+    .then((annotation) => {
       response(res, true, "Annotation successfully updated!", annotation, 200);
     }, (error) => {
       response(res, false, "Failed trying update annotation...", error, 500);
@@ -90,8 +95,12 @@ router.put('/annotations/:id', async (req, res) => {
 
 // DELETE – To remove a annotation by id (localhost:3000/annotations/:id)
 router.delete('/annotations/:id', async (req, res) => {
+  
   await Annotations.findByIdAndRemove(req.params.id)
     .then((annotation) => {
+      if(req.body.user._id != annotation.author_id) {
+        response(res, false, "This user don't have permission to update this annotation...", undefined, 400);
+      }
       response(res, true, "Annotation deleted successfully!", annotation, 200);
     }, (error) => {
       response(res, false, "Failed trying remove the annotation...", error, 500);
